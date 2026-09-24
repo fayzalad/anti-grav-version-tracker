@@ -4,6 +4,8 @@ A personal spending tracker for one person. **One `index.html`** — markup, CSS
 a single file. No framework, no build step, no backend, no accounts. Installed to an iPhone Home
 Screen from GitHub Pages.
 
+**Live Demo / PWA:** [https://fayzalad.github.io/anti-grav-version-tracker/](https://fayzalad.github.io/anti-grav-version-tracker/)
+
 This README is the durable record of the project: what each piece does, what has been added or
 changed, and why. `TRACKER-PROJECT.md` goes deeper on the architecture and on bugs that must not
 be reintroduced — read it before changing the money maths.
