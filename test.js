@@ -2005,6 +2005,37 @@ const seed = {
      JSON.parse(w.localStorage.getItem('slip:v4')).starts['2026-08'] === undefined,
      JSON.stringify(JSON.parse(w.localStorage.getItem('slip:v4')).starts));
 
+  console.log('\n=== 72. antigravity revamp: security, search indexing and smart insights ===');
+  const xssSeed = JSON.parse(JSON.stringify(seed));
+  xssSeed.entries.push({
+    id: 999,
+    amt: 125,
+    cat: 'Groceries',
+    note: '<script>alert("hack")</script><img src="x" onerror="evil()">',
+    date: '2026-08-31',
+    type: 'out',
+    cyc: '2026-08-28'
+  });
+  dom = await boot(xssSeed); w = dom.window; d = w.document; $ = id => d.getElementById(id);
+  const injectedScript = d.querySelector('#log script');
+  const injectedImg = d.querySelector('#log img');
+  ok('notes do not execute or inject raw scripts', injectedScript === null);
+  ok('notes do not inject raw image tags with onerror handlers', injectedImg === null);
+  const entryLi = [...d.querySelectorAll('#log li')].find(li => li.textContent.includes('125'));
+  ok('entry row safely displays the text content', !!entryLi && entryLi.textContent.includes('alert("hack")'));
+
+  $('openFind').click();
+  $('findQ').value = 'hack';
+  $('findQ').dispatchEvent(new w.Event('input'));
+  ok('memoized search indexing finds the sanitized note', $('findSum').textContent.includes('1 entry'));
+
+  $('closeFind').click();
+  $('secCap').click();
+  ok('month sheet has smart insights card visible', $('monthInsightsCard').style.display === 'block');
+  ok('insights grid provides 4 financial metric tiles', d.querySelectorAll('#monthInsightsGrid .insightTile').length === 4);
+  ok('monthStats summary grid remains exactly 6 direct cells', d.querySelectorAll('#monthStats div').length === 6);
+  ok('slip-build meta tag is bumped', d.querySelector('meta[name="slip-build"]').getAttribute('content') === '2026-09-25-1');
+
   console.log('\n=== result ===');
   console.log(pass + ' passed, ' + fail + ' failed');
   process.exit(fail ? 1 : 0);

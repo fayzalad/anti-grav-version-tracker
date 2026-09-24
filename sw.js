@@ -1,4 +1,4 @@
-const CACHE = 'slip-v3';
+const CACHE = 'slip-v4';
 const SHELL = ['./', './index.html', './manifest.json',
                './icon-192.png', './icon-512.png', './icon-maskable.png'];
 
@@ -21,7 +21,8 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
   const url = new URL(e.request.url);
-  if (url.hostname === 'api.github.com' || url.hostname === 'open.er-api.com') return;
+  // Never intercept or cache cross-origin external API calls (Alpha Vantage, CoinGecko, GitHub, ER-API)
+  if (url.origin !== self.location.origin) return;
   if (e.request.method !== 'GET') return;
 
   const isDoc = e.request.mode === 'navigate' ||

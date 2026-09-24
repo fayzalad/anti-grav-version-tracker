@@ -27,7 +27,7 @@ be reintroduced — read it before changing the money maths.
 node test.js
 ```
 
-**425 checks, all passing.** Run it before and after every change — it has caught genuine bugs
+**433 checks, all passing.** Run it before and after every change — it has caught genuine bugs
 that code review missed, several in the same session they were introduced.
 
 ## Deploying
@@ -116,6 +116,37 @@ as spending.
 ## Changelog
 
 Newest first. Each entry is keyed to the `slip-build` stamp it shipped under.
+
+### `2026-09-25-1` — Antigravity revamp: security, search indexing, tactile motion and smart insights
+
+A comprehensive polish and hardening pass elevating the app to flagship production standard:
+
+**What changed:**
+
+- **Security & XSS sanitization:** Introduced `escHtml()` for all user-controlled text inserted
+  into dynamic HTML cards (`e.note`, custom categories, bill names, search feedback). Prevents
+  script injection and DOM vulnerabilities when restoring backups or syncing via GitHub Gist.
+- **Search performance:** Added memoized search string indexing (`getHay()`) on entries. Avoids
+  thousands of date formatting and string concatenation calls on every keystroke, keeping search
+  instantaneous across large multi-year ledgers.
+- **Tactile micro-interactions & Apple fluid UI:** Physical press scaling transitions (`:active`),
+  spring-like release, and subtle device haptic taps (`navigator.vibrate`) on key actions (saving
+  entries, logging bills, switching views).
+- **Accessibility & dual visual signaling:** Added high-contrast striped patterns to warning and
+  over-budget progress bars (`.ptrack i.warn`, `.ptrack i.over`) so status is never conveyed by color
+  alone. Added `:focus-visible` accessible keyboard focus rings.
+- **Smart Month Insights:** Added `#monthInsightsCard` to the Month Sheet (`#monthDlg`), providing a
+  4-metric executive financial breakdown:
+  1. Savings Rate percentage (`put / received`)
+  2. Daily living burn rate (average daily living spend)
+  3. Discretionary living vs fixed bills ratio
+  4. Top spending category and amount
+- **PWA Service Worker offline hardening:** Updated `sw.js` (cache `slip-v4`) to bypass external
+  cross-origin API fetches (Alpha Vantage, CoinGecko, GitHub, ER-API) so offline failures are caught
+  cleanly instead of returning HTML fallback documents into JSON parsers.
+
+**Tests:** 425 → 433. Section 72 asserts XSS sanitization, search indexing, month insights card
+rendering, 6-cell `#monthStats` invariant preservation, and the build tag bump.
 
 ### `2026-09-24-2` — and it corrects itself on launch
 
